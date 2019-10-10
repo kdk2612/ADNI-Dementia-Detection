@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap/css/bootstrap.min.css') }}" >
+    <!-- Plugins CSS -->    
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/prism/prism.css') }}">
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]--> 
+
+ <title>Dementia Aid</title>
+</head>
+
+<body>
+<body data-spy="scroll">
+<header id="header" class="header">  
+        <div class="container">            
+            <h1 class="logo pull-left">
+                <a class="scrollto" href="#promo">
+                    <span class="logo-title">Dementia Aid</span>
+                </a>
+            </h1><!--//logo-->              
+            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button><!--//nav-toggle-->
+                </div><!--//navbar-header-->            
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#about">About</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#docs">Classify</a></li>
+                        <li class="nav-item last"><a class="scrollto" href="#contact">Contact</a></li>
+
+                    </ul><!--//nav-->
+                </div><!--//navabr-collapse-->
+            </nav><!--//main-nav-->
+        </div>
+    </header><!--//header-->
+
+        <section id="docs" class="docs section">
+        <div class="container">
+            <div class="docs-inner">
+            <h2 class="title text-center">Results</h2>            
+            <div class="block">
+                <h3 class="sub-title text-center">EHR</h3>
+                <p>Below is the EHR submitted for classification. </p>
+                
+                <div class="code-block">
+                    <!--//Use Prismjs - http://prismjs.com/index.html#basic-usage -->
+                    <div>{{ content }}</div>
+                </div><!--//code-block-->
+            </div><!--//block-->
+            
+            <div class="block">
+                <h3 class="sub-title text-center">Insights</h3>
+                <ul class="list-unstyled">
+                    <li><strong>Prediction:</strong> {{ prediction }}</li>
+                    <li><strong>Confidence Level:</strong>{{ probability }}%</li>
+                </ul>
+                <div class="flashes">
+  					{% for explaination in get_flashed_messages() %}
+    				{{ explaination }}
+  					{% endfor %}
+				</div>
+	
+            <div id='button'>
+		<form action="/thanks" method="post">
+			<input class="btn btn-cta-secondary" type=submit value='Correct' name='feedback_button'>
+			<input class="btn btn-cta-secondary" type=submit value='Incorrect' name='feedback_button'>
+			<input class="btn btn-cta-secondary" type=hidden value='{{ prediction }}' name='prediction'>
+			<input class="btn btn-cta-secondary" type=hidden value='{{ content }}' name='review'>
+		</form>
+	</div>
+	<br>
+	<div id='button'>
+		<form action="/">
+			<input class="btn btn-cta-secondary" type=submit value='Submit another review'>
+		</form>
+	</div>
+            
+    </section><!--//features-->
+	
+	
+</body>
+
+</html>

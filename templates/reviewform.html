@@ -1,0 +1,233 @@
+<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/bootstrap/css/bootstrap.min.css') }}" >
+    <!-- Plugins CSS -->    
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/font-awesome/css/font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='plugins/prism/prism.css') }}">
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]--> 
+
+ <title>Dementia Aid</title>
+</head>
+
+<body data-spy="scroll">
+<header id="header" class="header">  
+        <div class="container">            
+            <h1 class="logo pull-left">
+                <a class="scrollto" href="#promo">
+                    <span class="logo-title">Dementia Aid</span>
+                </a>
+            </h1><!--//logo-->              
+            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button><!--//nav-toggle-->
+                </div><!--//navbar-header-->            
+                <div class="navbar-collapse collapse" id="navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#about">About</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#features">Features</a></li>
+                        <li class="nav-item"><a class="scrollto" href="#docs">Classify</a></li>
+                        <li class="nav-item last"><a class="scrollto" href="#contact">Contact</a></li>
+
+                    </ul><!--//nav-->
+                </div><!--//navabr-collapse-->
+            </nav><!--//main-nav-->
+        </div>
+    </header><!--//header-->
+        <div class="container">
+      {% block container %}{% endblock %}
+    </div>
+
+
+<section id="promo" class="promo section offset-header">
+        <div class="container text-center" align="center">
+            <h2 class="title">Dementia<span class="highlight">Detection</span></h2>
+            <p class="intro">A free tool to make Dementia Detection more intutive, pain-free and easy</p>
+            <div class="btns" align="center">
+                <a class="btn btn-cta-secondary" href="http://themes.3rdwavemedia.com/" target="_blank">Demo</a>
+                <a class="btn btn-cta-primary" href="http://themes.3rdwavemedia.com/website-templates/devaid-free-bootstrap-theme-developers/" target="_blank">Download</a>
+            </div>
+            <ul class="meta list-inline">
+                
+            </ul><!--//meta-->
+        </div><!--//container-->
+        <div class="social-media">
+            <div class="social-media-inner container text-center">
+                <ul class="list-inline">
+                    <!--//
+                    <li class="github-follow"><iframe src="http://ghbtns.com/github-btn.html?user=mdo&type=follow&count=true"
+  allowtransparency="true" frameborder="0" scrolling="0" width="165" height="20"></iframe></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+    </section><!--//promo-->
+    <!-- ******ABOUT****** --> 
+    <section id="about" class="about section">
+        <div class="container">
+            <h2 class="title text-center">What is Dementia Aid?</h2>
+            <p class="intro text-center">The primary task in this Project is the classification/prediction of a person’s dementia progression status using their electronic clinical data. This tool aims at making the detection of dementia easier, more painless and inexpensive.</p>
+            <div class="row">
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-heart"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">For the Health Community</h3>
+                        <p>Anyone with access to an EHR can use this tool.</p>
+                    </div><!--//content-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Time saver</h3>
+                        <p>Skip the lines in the numerous tests that you have to take to detect demetia.</p>
+                    </div><!--//content-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-crosshairs"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Easier Detection</h3>
+                        <p>All you need is an EHR to know if you have demetia.</p>
+                    </div><!--//content-->
+                </div><!--//item-->           
+                <div class="clearfix visible-md"></div>    
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-tablet"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Mobile-friendly</h3>
+                        <p>Can be used on the go!</p>
+                    </div><!--//content-->
+                </div><!--//item-->                
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-code"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">Easy on Pocket</h3>
+                        <p>Forget all the expensive tests</p>
+                    </div><!--//content-->
+                </div><!--//item-->
+                <div class="item col-md-4 col-sm-6 col-xs-12">
+                    <div class="icon-holder">
+                        <i class="fa fa-coffee"></i>
+                    </div>
+                    <div class="content">
+                        <h3 class="sub-title">LESS Hassel</h3>
+                        <p>All you need is an account</p>
+                    </div><!--//content-->
+                </div><!--//item-->               
+            </div><!--//row-->            
+        </div><!--//container-->
+    </section><!--//about-->
+
+    <!-- ******FEATURES****** --> 
+    <section id="features" class="features section">
+        <div class="container text-center">
+            <h2 class="title">Features</h2>
+            <ul class="feature-list list-unstyled">
+                <li><i class="fa fa-check"></i> Fully responsive</li>
+                <li><i class="fa fa-check"></i> Quicker Decisions</li>
+                <li><i class="fa fa-check"></i> Built on <a href="http://getbootstrap.com/" target="_blank"> 600 EHRs</a></li>
+                <li><i class="fa fa-check"></i> Detect Dementia early</li>
+                <li><i class="fa fa-check"></i> Inexpensive</li>
+                <li><i class="fa fa-check"></i> Better insights</li>
+            </ul>
+        </div><!--//container-->
+    </section><!--//features-->
+
+<!-- ******FEATURES****** --> 
+    <section id="docs" class="docs section">
+        <div class="container text-center">
+            <h2 class="title">Classify</h2>
+            <ul class="feature-list list-unstyled">
+                <h2>Please enter your EHR:</h2>
+        <h3>The model will tell you if the patient has demntia or not with a confidence score!</h3> 
+    {% from "_formhelpers.html" import render_field %}
+    <form method=post action="/results">
+        <dl>
+        {{ render_field(form.moviereview, cols='50', rows='10') }}
+        </dl>
+        <div class="btns">
+        <input class="btn btn-cta-secondary" type=submit value='Submit Document' name='submit_btn'>
+        </div>
+    </form>
+            </ul>
+        </div><!--//container-->
+    </section><!--//features-->
+    
+<!-- ******CONTACT****** --> 
+    <section id="contact" class="contact section has-pattern">
+        <div class="container">
+            <div class="contact-inner">
+                <h2 class="title  text-center">Contact</h2>
+                <p class="intro  text-center">I hope you find this project intutive and useful. <br />Feel free to get in touch if you have any questions or suggestions.</p>
+                <div class="author-message">                      
+                    <div class="profile">
+                        <img class="img-responsive" src="{{ url_for('static', filename='assets/images/profile.png') }}" alt="" />
+                    </div><!--//profile-->
+                    <div class="speech-bubble">
+                        <h3 class="sub-title">Want to get more insights in the future?</h3>
+                        <p>I am a student at RIT</a> 
+                        <p>If you like what I do, you can contact me on at kdk2612@rit.edu and I will keep you informed about my next free project there :)</p>
+                        <div class="source">
+                            <span class="name"><a href="https://twitter.com/3rdwave_themes" target="_blank">Karan Kothari</a></span>
+                            <br />
+                            <span class="title">ML Engineering</span>
+                        </div><!--//source-->
+                    </div><!--//speech-bubble-->                        
+                </div><!--//author-message-->
+                <div class="clearfix"></div>
+                <div class="info text-center">
+                    <h4 class="sub-title">Get Connected</h4>
+                    <ul class="social-icons list-inline">
+                        <li><a href="" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href=""><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href=""><i class="fa fa-instagram"></i></a></li>  
+                        <li><a href=""><i class="fa fa-dribbble"></i></a></li>   
+                        <li class="last"><a href="mailto: kdk2612@rit.edu"><i class="fa fa-envelope"></i></a></li>              
+                    </ul>
+                </div><!--//info-->
+            </div><!--//contact-inner-->
+        </div><!--//container-->
+    </section><!--//contact-->  
+      
+
+    <!-- Javascript -->          
+    <script type="text/javascript" src="assets/plugins/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>    
+    <script type="text/javascript" src="assets/plugins/jquery.easing.1.3.js"></script>   
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>     
+    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script> 
+    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>    
+    <script type="text/javascript" src="assets/js/main.js"></script>      
+</body>
+</html>
