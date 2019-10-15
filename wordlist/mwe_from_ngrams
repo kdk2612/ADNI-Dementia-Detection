@@ -1,0 +1,113 @@
+abdominal discomfort,abdominal_pain
+abdominal pain,abdominal_pain
+acid reflux,acid_reflux
+adas cog,adas_cog
+allergic rhinitis,allergic_rhinitis
+ankle swelling,ankle_swelling
+artery disease,artery_disease
+arthritis right,arthritis_right
+atrial fibrillation,atrial_fibrillation
+back pain,back_pain
+basal cell carcinoma,basal_cell_carcinoma
+benign prostatic hypertrophy,benign_prostatic_hypertrophy
+bilateral hearing,bilateral_hearing
+blurred vision,blurred_vision
+both eyes,both_eyes
+breast cancer,breast_cancer
+carpal tunnel,carpal_tunnel
+cataract removal,cataract_removal
+cataract surgery,cataract_surgery
+cell carcinoma,cell_carcinoma
+chest pain,chest_pain
+clinical status,clinical_status
+clinically significant,clinically_significant
+cognitive complaints,cognitive_complaints
+cognitive decline,cognitive_decline
+cognitive function,cognitive_function
+cognitive functional,cognitive_functional
+cognitive testing,cognitive_testing
+confounding factors,confounding_factors
+continues meet criteria,continues_meet_criteria
+continues meet,continues_meet
+controlled medication no,controlled_medication_no
+controlled medication,controlled_medication
+coronary artery disease,coronary_artery_disease
+coronary artery,coronary_artery
+daily living,daily_living
+decline memory,memory_problems
+depressed mood,depressed_mood
+depressive symptoms,depressive_symptoms
+diabetes mellitus,diabetes_mellitus
+dry mouth,dry_mouth
+enlarged prostate,enlarged_prostate
+executive function,executive_function
+family history,family_history
+follow up,follow_up
+gall bladder,gall_bladder
+gastroesophageal reflux,gastroesophageal_reflux
+head injury,head_injury
+hearing aids,hearing_aids
+hearing loss,hearing_loss
+high blood pressure,high_blood_pressure
+high cholesterol,high_cholesterol
+hip pain,hip_pain
+hip replacement,hip_replacement
+hit head,hit_head
+hot flashes,hot_flashes
+inguinal hernia repair,inguinal_hernia_repair
+joint pain,joint_pain
+knee pain,knee_pain
+knee replacement,knee_replacement
+knee surgery,knee_surgery
+no cognitive memory complaint,no_cognitive_memory_complaint
+last visit,last_visit
+last year,last_year
+logical memory,logical_memory
+loss consciousness,loss_consciousness
+low energy drowsiness,low_energy_drowsiness
+low energy,low_energy
+lumbar puncture,lumbar_puncture
+macular degeneration,macular_degeneration
+medical history,medical_history
+memory complaints,memory_complaints
+memory decline,memory_problems
+memory impairment,memory_problems
+memory loss,memory_problems
+memory problems,memory_problems
+mild depression,mild_depression
+musculoskeletal pain,musculoskeletal_pain
+neuropsychological testing,neuropsychological_testing
+no evidence,no_evidence
+no longer,no_longer
+no treatment,no_treatment
+normal cognition,normal_cognition
+obstructive sleep apnea,obstructive_sleep_apnea
+participant reports,participant_reports
+partner reports,partner_reports
+partner reported,partner_reports
+patient reported,patient_reports
+patient reports,patient_reports
+per day,per_day
+physical therapy,physical_therapy
+prostate cancer,prostate_cancer
+prostatic hyperplasia,prostatic_hyperplasia
+prostatic hypertrophy,prostatic_hypertrophy
+rotator cuff,rotator_cuff
+screening visit,screening_visit
+seasonal allergies,seasonal_allergies
+short term memory,short_term_memory
+shortness breath,shortness_breath
+shoulder pain,shoulder_pain
+skin cancer,skin_cancer
+sleep apnea,sleep_apnea
+spinal stenosis,spinal_stenosis
+squamous cell,squamous_cell
+status post,status_post
+study partner reports,study_partner_reports
+study partner,study_partner
+subject reports,subject_reports
+subject reported,subject_reports
+subjective memory complaints,subjective_memory_complaints
+tubal ligation,tubal_ligation
+urinary frequency,urinary_frequency
+urinary incontinence,urinary_incontinence
