@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from wtforms import Form, TextAreaField, validators
+from application import classify
 
 app = Flask(__name__)
 

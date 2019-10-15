@@ -22,7 +22,6 @@ def vote():
      json_ = request.json
      query_df = pd.DataFrame(json_)
      #query = pd.get_dummies(query_df)
-         import classification
     import classification
     from classification import cross_val
     clf2  = RandomForestClassifier(n_estimators=1000,class_weight={0:.95,1:.05})
