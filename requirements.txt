@@ -25,6 +25,9 @@ wtforms-2.2.1
 boto3==1.9.234
 botocore==1.12.234
 Bottleneck==1.2.1
+eli5-0.10.1
+graphviz-0.13
+tabulate-0.8.5
 bz2file==0.98
 certifi==2019.6.16
 cffi==1.12.3

@@ -6,25 +6,10 @@ Created on Thu Dec  1 10:59:45 2016
 """
 from __future__ import division, print_function, absolute_import
  
-#import tensorflow as tf
-#import tflearn
-#from tflearn.layers.core import input_data, dropout, fully_connected
-#from tflearn.layers.conv import conv_1d, global_max_pool
-#from tflearn.layers.merge_ops import merge
-#from tflearn.layers.estimator import regression
-#from tflearn.data_utils import to_categorical, pad_sequences
-#from tflearn.datasets import imdb
-#from tflearn.data_utils import VocabularyProcessor
-#from tflearn.layers.embedding_ops import embedding
-#from tflearn.layers.recurrent import bidirectional_rnn, BasicLSTMCell
-#from tflearn.layers.estimator import regression
-from classification import cross_val
+
 from classification import MajorityVoteClassifier
  
-#from tensorflow.contrib.learn.python.learn.preprocessing import CategoricalVocabulary
-#from tensorflow.contrib.learn.python.learn.preprocessing import text
 import os
-#os.environ['NLTK_DATA'] = '/mnt/domino/nltk-data/nltk-data'
 import pickle
 import time
 import numpy as np
@@ -50,7 +35,6 @@ from gensim.corpora import Dictionary as dictbuild
 from nltk.corpus import stopwords
 from gensim.models import ldamulticore
 from gensim.models import LdaModel
-from sklearn import cross_validation
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn import naive_bayes
@@ -58,21 +42,19 @@ from random import shuffle
 from gensim.models import word2vec
 from sklearn.neural_network import MLPClassifier
 
-#from deep_learning import convert_docs,create_CNN,load_CNN,create_RNN,load_RNN,classify_DNN,pred_user_dnn
 from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier,AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 from pprint import pprint   # pretty-printer
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import KFold, cross_val_score
 from sklearn.metrics import accuracy_score, confusion_matrix
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from sklearn.metrics import roc_auc_score, auc
 from gensim import utils
 from gensim.models.doc2vec import LabeledSentence
 from gensim.models import Doc2Vec
-from sklearn.cross_validation import cross_val_score
 from final_cleaner import normalize_user
 import datetime
 from classification2 import MajorityVoteClf
@@ -121,32 +103,25 @@ def get_most_recent(path):
             dates= [datetime.datetime.strptime(m.group(), '%Y-%m-%d').date() for m in match if m != None]
             return str(max(dates))
     
-#    read_results_csv = pd.read_csv(path)
-#    read_results_csv['date'] = pd.to_datetime(read_results_csv['date'])
-#    read_results_csv['date']=read_results_csv['date'].dt.date
-#    most_recent = str(read_results_csv['date'].max())    
-#    return most_recent
+    
 def get_most_recent_classifiers(path):
     if path == None:
         print('ValueError:Please enter a valid path')
     else:
         match = [re.search(r'ensemble_\d{4}-\d{2}-\d{2}', file) for file in  os.listdir(path)]
         if match.count(None)==len(match):
-            print('Folder has no file with date in the File_name')
+            print('Folder has no Classifiers with date in the File_name')
         else:
             file = max([m.group() for m in match if m!=None])
             date_match = re.search(r'\d{4}-\d{2}-\d{2}', file).group()
-        return date_match
+            return date_match
     
     
     
-path='/Users/karankothari/Desktop/capstone_karan/'
+#path='/Users/karankothari/Desktop/capstone_karan/' 
  
 #setting the dates to be used to read the files
 now= str(datetime.datetime.now().date())
- 
- 
- 
  
 #now= '2016-12-08'
 start_delta = datetime.timedelta(weeks=1)
@@ -156,10 +131,10 @@ last_week = str(datetime.datetime.now().date()- start_delta)
 #setting the path to the current directory that is required
 current_dir = os.getcwd()
 check_dir = os.path.basename(os.path.normpath(current_dir))
-if check_dir == 'capstone_karan':
+if check_dir == 'ADNI-Dementia-Detection':
     path = os.getcwd()
 else:
-    os.chdir(r'capstone_karan')
+    os.chdir(r'ADNI-Dementia-Detection')
     path = os.getcwd()
  
 #paths of the folders that has different things in it
@@ -451,6 +426,7 @@ def lsa(docs_tfidf):
     print("  Explained variance of the SVD step: {}%".format(int(explained_variance * 100)))
     return lsa,lsa_features
    
+    
 def lsa_test_transform(model,user_tfidf):
     '''
     Used for transforming the user string for LSA features
@@ -511,6 +487,7 @@ def initiate_LDA(docs=None,no_topics=100,*positional_parameters,**keyword_parame
     topicsDist = np.asarray(topicsDist)
     return topicsDist, finalDict,lda_model
  
+    
 def user_transform_lda(user_string, dictionary,model,no_topics=100):
     
     x=str(user_string)[2:-2]
@@ -576,6 +553,7 @@ def read_compare_set():
     model_name = rows[-1][2]
     return model_date,confidence, model_name  
  
+    
 def for_api_input(user_text,plan_type,plan_year):
     '''
     This function is used for the API input and out as the final model
@@ -677,36 +655,6 @@ def for_api_input(user_text,plan_type,plan_year):
             print(path_clf)
             result,confidence =  pred_user(user_transformed, trained_clf)
         
-#        elif transformer == 'RNN':
-#            final_name = 'RNN'.lower()+'_'+model_date+'.clf'
-#            path_rnn=os.path.join(trained,final_name) 
-#            vocab = VocabularyProcessor.restore(r'vocab/cnn.voc')
-#            vocab.vocabulary_.freeze()
-#            print(len(vocab.vocabulary_))
-#            data,vocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m,vocab=vocab)
-#            print(len(vocab_processor.vocabulary_))
-#            model = load_RNN(MAX_DOCUMENT_LENGTH,n_words,path_rnn)
-#            print(len(vocab_processor.vocabulary_))
-#            user_transformed = np.array(list(vocab_processor.transform(clean_user_list)))
-#            user_transformed = pad_sequences(sequences=user_transformed,maxlen=MAX_DOCUMENT_LENGTH, value=0.)
-#            result,confidence = pred_user_dnn(user_transformed, model)
-            
-#        elif transformer == 'CNN':
-#            final_name = 'CNN'.lower()+'_'+model_date+'.clf'
-#            path_cnn=os.path.join(trained,final_name)            
-#            print('Reading data')
-#            vocab = VocabularyProcessor.restore(r'vocab/cnn.voc')
-#            vocab.vocabulary_.freeze()
-#            print(len(vocab.vocabulary_))
-#            data,vocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m,vocab=vocab)
-#            print(len(vocab_processor.vocabulary_))
-#            print('loading the cnn model')
-#            model = load_CNN(MAX_DOCUMENT_LENGTH,n_words,path_cnn)
-#            print('starting prediction')
-#            user_transformed = np.array(list(vocab_processor.transform(clean_user_list)))
-#            user_transformed = pad_sequences(sequences=user_transformed,maxlen=MAX_DOCUMENT_LENGTH, value=0.)
-#            result,confidence = pred_user_dnn(user_transformed, model)            
-        
         xpe= 'There will be an explaination'
         return({'recoveryeligible': result
                 ,'confidencelevel': confidence
@@ -725,13 +673,8 @@ def weekly_run_create():
     from classification import cross_val
     from classification import MajorityVoteClassifier
     
-#    from tensorflow.contrib.learn.python.learn.preprocessing import CategoricalVocabulary
-#    from tensorflow.contrib.learn.python.learn.preprocessing import text
-#    from deep_learning import convert_docs,create_CNN,load_CNN,create_RNN,load_RNN,classify_DNN,pred_user_dnn
-    #read the latest class and the Docs
     clas, documents = readcsv(os.path.join(path,'raw_data',current_cleaned))
-    #clas, documents = read_pandas(os.path.join(path,'raw_data',current_cleaned))
-    #voc=get_voc(documents)
+
     ## Initiate the things we need 
     clf2  = RandomForestClassifier(n_estimators=1000)#,class_weight={1:0.05,0:.95})
     clf1 = linear_model.LogisticRegression(penalty='l1')#,class_weight={1:0.05,0:.95})
@@ -742,48 +685,7 @@ def weekly_run_create():
     #clf7=  MLPClassifier(solver='adam', alpha=1e-5,hidden_layer_sizes=(200,150,50,20), random_state=1)
     clf_labels = ['Logistic Regression','Random Forest','SVC','Decision Tree','Ada Boost','Gradient Boosting','MLP-DNN']
     mv_clf = MajorityVoteClassifier(classifiers=[clf1, clf2, clf3,clf4,clf5,clf6])
-    #import pandas as pd
-    #voca_file=r'final_voc.csv'
-    #voc_file= pd.read_csv(os.path.join(raw_data,voca_file))
-    #voc= list(set(voc_file['word']))
-    #print(voc[1:5])
-    #voc=None
-#    dnn_vocab= CategoricalVocabulary()
-#    for x in voc:
-#        dnn_vocab.add(x)
-#    dnn_vocab.freeze()
-#    global m
-    
-    
-#    tf.reset_default_graph()
-#    ##2 deep learning models
-#    print('Starting RNN')
-#    data,vocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m)
-#    vocab_processor.vocabulary_.freeze()
-#    vocab_processor.save(r'vocab/rnn.voc')
-#    final_name = 'RNN'.lower()+'_'+now+'.clf'
-#    model_rnn=os.path.join(trained,final_name)
-#    racc, rroc_auc,rfp,rtp = create_RNN(MAX_DOCUMENT_LENGTH,n_words,data,clas,model_rnn)
-#    #clf, acc, roc_auc =classify_DNN(data,clas,model)
-#    #save_file(model=clf,name='LSTM',ext='.clf',date=now,folder_path=trained)
-#    save_results(date=now,area_under_curve=rroc_auc,clf_name='RNN')
-#    print(len(vocab_processor.vocabulary_))
-#    print('RNN done')
-    
-    
-#    tf.reset_default_graph()
-#    # CNN model
-#    print('Starting CNN')
-#    data,vocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m)
-#    vocab_processor.vocabulary_.freeze()
-#    vocab_processor.save(r'vocab/cnn.voc')
-#    final_name = 'CNN'.lower()+'_'+now+'.clf'
-#    model_cnn=os.path.join(trained,final_name)
-#    cacc, croc_auc,cfp,ctp = create_CNN(MAX_DOCUMENT_LENGTH,n_words,data,clas,model_cnn)
-#    #save_file(model=clf,name='CNN',ext='.clf',date=now,folder_path=trained)
-#    save_results(date=now,area_under_curve=croc_auc,clf_name='CNN')
-#    print(len(vocab_processor.vocabulary_))
-#    print('CNN done')
+
     
     ## First we will do the BOW model and the Classifier trained on it
     print('\nstart BOW')
@@ -929,30 +831,6 @@ model_name='mv_ensemble'
 path_clf= get_filename(name=model_name,ext='.clf',date=model_date,folder_path=trained)
 ensemble_clf = pickle.load(open(os.path.join(trained,path_clf),'rb'))
 
-#transformer = 'RNN'
-#final_name = 'RNN'.lower()+'_'+model_date+'.clf'
-#path_rnn=os.path.join(trained,final_name)            
-#print('Reading data')
-#vocab = VocabularyProcessor.restore(r'vocab/cnn.voc')
-#vocab.vocabulary_.freeze()
-#print(len(vocab.vocabulary_))
-#data,rnnvocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m,vocab=vocab)
-#print('loading the rnn model')
-#rnn_model = load_RNN(MAX_DOCUMENT_LENGTH,n_words,path_rnn)
-#print(len(rnnvocab_processor.vocabulary_))
-
-#transformer ='CNN'
-#final_name = 'CNN'.lower()+'_'+model_date+'.clf'
-#final_name = 'CNN'.lower()+'_'+model_date+'.clf'
-#path_cnn=os.path.join(trained,final_name)            
-#print('Reading data')
-#vocab = VocabularyProcessor.restore(r'vocab/cnn.voc')
-#vocab.vocabulary_.freeze()
-#print(len(vocab.vocabulary_))
-#data,cnnvocab_processor, n_words, MAX_DOCUMENT_LENGTH = convert_docs(documents,no_class=2,MAX_DOCUMENT_LENGTH=m,vocab=vocab)
-#print(len(cnnvocab_processor.vocabulary_))
-#print('loading the cnn model')
-#cnn_model = load_CNN(MAX_DOCUMENT_LENGTH,n_words,path_cnn)
 
 def voted(user_text,plan_year,plan_type):
     import classification
@@ -987,10 +865,6 @@ def voted(user_text,plan_year,plan_type):
     global lda_model
     global lsa_model
     global ensemble_clf
-    #global rnn_model
-    #global rnnvocab_processor
-    #global cnnvocab_processor
-    #global cnn_model
     global doc_model
     global word_model
 
@@ -1030,39 +904,6 @@ def voted(user_text,plan_year,plan_type):
     label.append(result)
     probability.append(confidence)
     print(label)
-    
-
-#    print('starting prediction')
-#    user_transformed = np.array(list(rnnvocab_processor.transform(clean_user_list)))
-#    user_transformed = pad_sequences(sequences=user_transformed,maxlen=MAX_DOCUMENT_LENGTH, value=0.)
-#    result,confidence = pred_user_dnn(user_transformed, rnn_model)
-#    label.append(result)
-#    probability.append(confidence)
-    
-#    print('starting prediction')
-#    user_transformed = np.array(list(cnnvocab_processor.transform(clean_user_list)))
-#    user_transformed = pad_sequences(sequences=user_transformed,maxlen=MAX_DOCUMENT_LENGTH, value=0.)
-#    result,confidence = pred_user_dnn(user_transformed, cnn_model)             
-#    label.append(result)        
-#    probability.append(confidence)
-#    print(label)
-#    print(probability)
-    
-#    proba=[]
-#    mapping={'Yes':0,'No':1}
-#    predicted=np.asarray([mapping[x] for x in label])
-#    
-#
-#
-#    final_pred =np.apply_along_axis(lambda x:np.argmax(np.bincount(x,weights=probability)),axis=0,arr=predicted)
-#    for x,y in zip(predicted,probability):
-#        if x == final_pred:
-#            proba.append(y)
-#    probab = sum(proba) /len(proba)
-#    print(final_pred, round(probab,2)*100)
-#    return final_pred, probab
-#    return label,confidence
-
 
     #xpe= 'Classification based on the language like'+ str(top_terms)
     return({'recoveryeligible': label
@@ -1071,63 +912,3 @@ def voted(user_text,plan_year,plan_type):
             ,'datereceived': modelstart
             ,'transformer used': 'Ensemble'
             ,'datereturned': time.strftime("%c")})
-    
-    
-    
-if __name__ == '__main__':
-    
-    import classification
-    
-    
-#    clas, documents = readcsv(os.path.join(path,'raw_data'))
-#    user_doc = input('Please enter the doc to be classified\n')
-#    print('Input successfull')
-#    t0= time.time()
-#    cleaned_doc = normalize_text(user_doc)
-#    print("  Cleaning done in %.3fsec" % (time.time() - t0))
-#    clean_user_token=cleaned_doc.split()
-#    clean_user_list=[' '.join(clean_user_token)]
-#    
-#    user_model = input('Please select the type of model you wish to use\na:BOW \nb:TFIDF \nc:Doc2Vec\nd:LSA\ne:LDA\n')
-#    if user_model =='a':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = bow(user_string=clean_user_list,docs=documents)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_tfidf,clas,user_tfidf)
-#        
-#    elif user_model == 'c':
-#        print('Strating to transform docs')
-#        sentences=convert_to(documents)
-#        print('Done transforming')
-#        print('Starting vocab generation')
-#        array_for_vocab = to_array(documents)
-#        model = initiate_doc2vec(sentences,array_for_vocab,n=10)
-#        print('Model is ready')
-#        
-#        print('Generating features from List of docs')
-#        features = getAvgFeatureVecs(documents,model)
-#        print('Generating features for user input')
-#        user_features = getAvgFeatureVecs(clean_user_list,model)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(features,clas,user_features)    
-#        
-#    elif user_model =='d':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = tfidf(user_string=clean_user_list,docs=documents)
-#        print('Starting LSA transformatin')
-#        model,docs_lsa = lsa(docs_tfidf)
-#        user_lsa = lsa_test_transform(model,user_tfidf)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_lsa,clas,user_lsa)
-#        
-#    elif user_model =='b':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = tfidf(user_string=clean_user_list,docs=documents)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_tfidf,clas,user_tfidf)
-#
-#    elif user_model =='e':
-#        print('Starting to transform Documents')
-#        topicsDist, finalDict,lda = lda_model(docs=documents,no_topics=100)
-#        user_features = user_transform_lda(clean_user_list, finalDict,lda,no_topics=100)
-#        cross_val(topicsDist,clas,user_features)

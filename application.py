@@ -134,10 +134,6 @@ def classify(user_text):
     global lda_model
     global lsa_model
     global ensemble_clf
-    #global rnn_model
-    #global rnnvocab_processor
-    #global cnnvocab_processor
-    #global cnn_model
     global doc_model
     global word_model
     

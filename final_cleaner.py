@@ -12,11 +12,11 @@ from datetime import date
 from nltk.stem import WordNetLemmatizer
 from sys import path
 DIR_WORDLIST='wordlist'
+
 ################################################################################
 # Wordlists for replacement
 
 def read_wordlist(wl):
-    #return dict( [ l.strip().split(',')
     return [ tuple(l.strip().split(','))
              for l in open('%s/%s'%(DIR_WORDLIST,wl), 'r') ] #)
 
@@ -62,12 +62,7 @@ def replace_words(string, wordlist, delim=' '):
         # matching right and this is the easiest way to fix it
         while word in new_string:
             new_string = new_string.replace( word, repl, 1 )
-    return new_string[1:-1] # b/c the extra delims
-    #words = string.split(delim)
-    #for i in range(len(words)):
-    #    if words[i] in wl:
-    #        words[i] = wl[words[i]]
-    #return delim.join([ w for w in words if w != '' ])
+    return new_string[1:-1] 
 
 
 ################################################################################
@@ -124,7 +119,6 @@ def lemmatize(text):
 ################################################################################
 # Replacement
 
-#RE_compound_numerals = re.compile( r'(' )
 
 def numerals2arabic(text):
     return replace_words(text, WL_numerals)
@@ -239,6 +233,7 @@ def tag_age_1(text):
         ptext = ptext.replace( age[0], AGE_TAG_STRING % (y+m/12, m%12), 1 )
     return ptext
 
+
 def tag_age_2(text):
     """Tag additional age cases, easier to just do separate.
 
@@ -333,71 +328,73 @@ def tag_date_1(text):
             '12/31/09'   => 'DATE_2009_12_31'  # Recent event
     """
     ptext = text
-    for date in RE_date_1.findall(ptext):
+    for datee in RE_date_1.findall(ptext):
         # If year is blank then so is everythign else
-        if date[3] in ALL_BLANKS:               # --/--/--, --/--/----
+        if datee[3] in ALL_BLANKS:               # --/--/--, --/--/----
             y, m, d = 0, 0, 0
         else:
             # Find year
-            y = int(date[3])
-            if len(date[3]) == 2:
-                y = int(date[3]) + (CURR_CENTURY if y < CURR_YEAR+10 else LAST_CENTURY)
-            elif len(date[3]) == 3:
+            y = int(datee[3])
+            if len(datee[3]) == 2:
+                y = int(datee[3]) + (CURR_CENTURY if y < CURR_YEAR+10 else LAST_CENTURY)
+            elif len(datee[3]) == 3:
                 continue
 
             # Find month and day
-            if date[1][0] in ALL_DIGITS:
-                if date[2][0] in ALL_DIGITS:    # 10/10/2010, etc. (Assume American)
-                    m = int(date[1])
-                    d = int(date[2])
-                elif date[2] in ALL_BLANKS:     # 10/unk/2010, 10/--/2010, etc
-                    m = int(date[1])
+            if datee[1][0] in ALL_DIGITS:
+                if datee[2][0] in ALL_DIGITS:    # 10/10/2010, etc. (Assume American)
+                    m = int(datee[1])
+                    d = int(datee[2])
+                elif datee[2] in ALL_BLANKS:     # 10/unk/2010, 10/--/2010, etc
+                    m = int(datee[1])
                     d = 0
-                elif date[2] in ALL_MONTHS:     # 10/oct/2010, etc
-                    m = int(WL_months_index[date[2]])
-                    d = int(date[1])
+                elif datee[2] in ALL_MONTHS:     # 10/oct/2010, etc
+                    m = int(WL_months_index[datee[2]])
+                    d = int(datee[1])
                 else:                           # Bad match
                     continue
-            elif date[1] in ALL_BLANKS:
+            elif datee[1] in ALL_BLANKS:
                 d = 0
-                if date[2] in ALL_BLANKS:       # --/--/2010, unk/unk/2010, etc
+                if datee[2] in ALL_BLANKS:       # --/--/2010, unk/unk/2010, etc
                     m = 0
-                elif date[2][0] in ALL_DIGITS:  # --/10/2010, unk/10/2010, etc
-                    m = int(date[2])
-                elif date[2] in ALL_MONTHS:     # --/oct/2010, unk/oct/2010, etc
+                elif datee[2][0] in ALL_DIGITS:  # --/10/2010, unk/10/2010, etc
+                    m = int(datee[2])
+                elif datee[2] in ALL_MONTHS:     # --/oct/2010, unk/oct/2010, etc
                     m = int(WL_months_index[date[2]])
                 else:                           # Bad match
                     continue
-            elif date[1] in ALL_MONTHS:
+            elif datee[1] in ALL_MONTHS:
                 m = int(WL_months_index[date[1]])
-                if date[2] in ALL_BLANKS:       # oct/--/2010, oct/unk.2010, etc
+                if datee[2] in ALL_BLANKS:       # oct/--/2010, oct/unk.2010, etc
                     d = 0
-                elif date[2][0] in ALL_DIGITS:  # oct/10/2010
-                    d = int(date[2])
+                elif datee[2][0] in ALL_DIGITS:  # oct/10/2010
+                    d = int(datee[2])
                 else:                           # Bad match
                     continue
             else:                               # Bad match
                 continue
-        ptext = ptext.replace( date[0], DATE_TAG_STRING%(y,m,d), 1 )
+        ptext = ptext.replace( datee[0], DATE_TAG_STRING%(y,m,d), 1 )
     return ptext
+
 
 def tag_date_2(text):
     """Tag 2-field numeric slash formatted dates
     """
     ptext = text
-    for date in RE_date_2.findall(ptext):
+    for datee in RE_date_2.findall(ptext):
         d = 0
-        y = int(date[2])
-        if date[1] in ALL_BLANKS:       # --/2010, unk/2010, ----/2010
+        y = int(datee[2])
+        if datee[1] in ALL_BLANKS:       # --/2010, unk/2010, ----/2010
             m = 0
-        elif date[1][0] in ALL_DIGITS:  # 10/2010, 1/2010
-            m = int(date[1])
+        elif datee[1][0] in ALL_DIGITS:  # 10/2010, 1/2010
+            m = int(datee[1])
             if m > 12:                  # Bad match
                 continue
         else:                           # Bad match
             continue
-        ptext = ptext.replace( date[0], DATE_TAG_STRING%(y,m,d), 1 )
+        ptext = ptext.replace( datee[0], DATE_TAG_STRING%(y,m,d), 1 )
     return ptext
+
 
 def tag_date_3(text):
     """Tag dates with worded months and non-American format
@@ -414,12 +411,13 @@ def tag_date_3(text):
     THIS SHOULD BE RUN BEFORE THE OTHER NAMED-MONTH TAGGER
     """
     ptext = text
-    for date in RE_date_3.findall(ptext):
-        d, m, y = int(date[1]), int(WL_months_index[date[2]]), int(date[3])
+    for datee in RE_date_3.findall(ptext):
+        d, m, y = int(datee[1]), int(WL_months_index[date[2]]), int(datee[3])
         if d < 1 or d > 31:
             continue
-        ptext = ptext.replace( date[0], DATE_TAG_STRING%(y,m,d), 1 )
+        ptext = ptext.replace( datee[0], DATE_TAG_STRING%(y,m,d), 1 )
     return ptext
+
 
 def tag_date_4(text):
     """Tag date string with named months in American format
@@ -487,6 +485,7 @@ def tag_date_4(text):
         ptext = ptext.replace( date[0], DATE_TAG_STRING%(y,m,d), 1 )
     return ptext
 
+
 def tag_date_5(text):
     """Tag date string with dashes or dots
 
@@ -540,6 +539,7 @@ def tag_date_5(text):
 
         ptext = ptext.replace( repl, DATE_TAG_STRING%(y,m,d), 1 )
     return ptext
+
 
 def tag_date_6(text):
     """Tag standalone years between 1901 and 2099.
@@ -657,6 +657,7 @@ def normalize_text(text):
         ptext = rule( ptext )
     return ptext
 
+
 def normalize_user(text):
     ptext = text
     for rule in RULES_IN_ORDER:
@@ -674,24 +675,14 @@ def run_clean():
         id=row.get('id')
         docs=row.get('data')
         name=row.get('RecoveryEligible')
-
-#        
-#    
-#        
-        
+   
     a=[d['data'] for d in data]  
     b=[d['id']for d in data]
     c=[d['recoveryEligible'] for d in data]
-#    
-    #df=df.dropna()
-#    a=list(df['data'])
-#    c=list(df['recoveryEligible'])
-#    b=list(df['id'])
+
     name=[]
     for x in c:
         name.append(x)
-    
-    len_docs = len(a)
     norm=[]
     
 
@@ -713,19 +704,5 @@ def run_clean():
         writer.writerow(header)
         writer.writerows(zip(b,c,norm))
     f.close()
-        
-    
-    
-if __name__ == "__main__":
-    
-#    import pandas as pd
-#    df= pd.read_csv(r'C:\Users\kkothari\Desktop\text_mining\raw_data\preprocessed_2016-12-21.csv',delimiter=',',header='infer',encoding = "ISO-8859-1")
-#    
-
-    raw_data = r'raw_data'
-    
-    
-    import datetime
-    import csv
 
     

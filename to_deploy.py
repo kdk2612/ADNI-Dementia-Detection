@@ -10,7 +10,6 @@ import pickle
 import time
 import numpy as np
 import re
-import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import TruncatedSVD
@@ -20,36 +19,22 @@ from sklearn.preprocessing import Imputer
 
 import csv
 from sklearn import linear_model
-from matplotlib import pyplot as plt
-from sklearn import metrics
-import scipy.sparse as sp
 
-from sklearn.decomposition import LatentDirichletAllocation as LDA
-from gensim import corpora,matutils,similarities
 from gensim.corpora import Dictionary as dictbuild
 from nltk.corpus import stopwords
-from gensim.models import ldamulticore
 from gensim.models import LdaModel
-from sklearn import cross_validation
 from sklearn.svm import SVC
-from sklearn import naive_bayes
 
-from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier,AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-from pprint import pprint   # pretty-printer
-import matplotlib.pyplot as plt
-import scipy.stats as stats
-from sklearn.cross_validation import KFold
-from sklearn.metrics import accuracy_score, confusion_matrix
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from sklearn.metrics import roc_auc_score, auc
 from gensim import utils
 from gensim.models.doc2vec import LabeledSentence
 from gensim.models import Doc2Vec
-from sklearn.cross_validation import cross_val_score
 from new_cleaner import normalize_user
 import datetime
+from classification import cross_val
+from classification import MajorityVoteClassifier
+from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier,AdaBoostClassifier
+
 
     
 def get_filename(name,ext,date,folder_path):
@@ -92,21 +77,13 @@ def get_most_recent(path):
             dates= [datetime.datetime.strptime(m.group(), '%Y-%m-%d').date() for m in match if m != None]
             return str(max(dates))
     
-#    read_results_csv = pd.read_csv(path)
-#    read_results_csv['date'] = pd.to_datetime(read_results_csv['date'])
-#    read_results_csv['date']=read_results_csv['date'].dt.date
-#    most_recent = str(read_results_csv['date'].max())    
-#    return most_recent
+
     
 path='/Users/karankothari/Desktop/capstone_karan/'
 
 #setting the dates to be used to read the files
 now= str(datetime.datetime.now().date())
 
-
-
-
-#now= '2016-12-08'
 start_delta = datetime.timedelta(weeks=1)
 last_week = str(datetime.datetime.now().date()- start_delta)
 
@@ -114,10 +91,10 @@ last_week = str(datetime.datetime.now().date()- start_delta)
 #setting the path to the current directory that is required
 current_dir = os.getcwd()
 check_dir = os.path.basename(os.path.normpath(current_dir))
-if check_dir == 'capstone_karan':
+if check_dir == 'ADNI-Dementia-Detection':
     path = os.getcwd()
 else:
-    os.chdir(r'capstone_karan')
+    os.chdir(r'ADNI-Dementia-Detection')
     path = os.getcwd()
 
 #paths of the folders that has different things in it
@@ -325,7 +302,7 @@ def initiate_doc2vec(docs,array_for_vocab,n=10, existing_model=None):
         model = Doc2Vec(min_count=1,dm = 1, window=10, size=200, sample=1e-4, negative=10, workers=7,alpha=0.25)
         model.build_vocab(array_for_vocab)
         for epoch in range(n):
-            model.train(docs)
+            model.train(docs, epochs = model.iter, total_examples=model.corpus_count)
             model.alpha -= 0.002  # decrease the learning rate`
             model.min_alpha = model.alpha  # fix the learning rate, no decay
        
@@ -348,7 +325,7 @@ def makeFeatureVec(line, model, num_features):
     nwords = 0
     # index2word is the list of the names of the words in the model's vocabulary.
     # convert it to set for speed
-    vocabulary_set = set(model.index2word)
+    vocabulary_set = set(model.wv.index2word)
     line2=line.split(' ')
     # loop over each word in the review and add its feature vector to the total
     # if the word is in the model's vocabulary
@@ -377,7 +354,7 @@ def getAvgFeatureVecs (docs, model):
     '''
     # initialize variables
     counter = 0
-    num_features = model.syn0.shape[1]
+    num_features = 200
     if type(docs) is list:
         docsFV = np.zeros((len(docs),num_features), dtype=np.float32)
         for line in docs:
@@ -595,9 +572,6 @@ def for_api_input(user_text,plan_type,plan_year):
                      
 
 def weekly_run_create():
-    import classification
-    from classification import cross_val
-    from classification import MajorityVoteClassifier
     #read the latest class and the Docs
     clas, documents = readcsv(os.path.join(path,'raw_data',current_cleaned))
     ## Initiate the things we need 
@@ -616,7 +590,7 @@ def weekly_run_create():
     save_file(model=docs_bow,name='bow', ext='.data', date=now,folder_path=features_path)
     clf,acc,broc_auc,bfb,btp=cross_val(docs_bow,clas,folds=5,clf=mv_clf,cv=True)
     save_file(model=clf,name='mv_bow',ext='.clf',date=now,folder_path=trained)
-    save_results(date=now,area_under_curve=roc_auc,clf_name='mv_bow')
+    save_results(date=now,area_under_curve=broc_auc,clf_name='mv_bow')
     print('BOW done')
     
     #Tfidf
@@ -625,7 +599,7 @@ def weekly_run_create():
     save_file(model=docs_tfidf,name='tfidf', ext='.data', date=now,folder_path=features_path)
     clf,acc,troc_auc,tfp,ttp=cross_val(docs_tfidf,clas,folds=5,clf=mv_clf,cv=True)    
     save_file(model=clf,name='mv_tfidf',ext='.clf',date=now,folder_path=trained)
-    save_results(date=now,area_under_curve=roc_auc,clf_name='mv_tfidf')
+    save_results(date=now,area_under_curve=troc_auc,clf_name='mv_tfidf')
 
     print('tf-idf done')
     
@@ -637,7 +611,7 @@ def weekly_run_create():
     finalDict.save('vocab/lda_dict.dict')
     clf,acc,ldroc_auc,ldfp,ldtp=cross_val(topicsDist,clas,folds=5,clf=mv_clf,cv=True)
     save_file(model=clf,name='mv_lda',ext='.clf',date=now,folder_path=trained)
-    save_results(date=now,area_under_curve=roc_auc,clf_name='mv_lda')
+    save_results(date=now,area_under_curve=ldroc_auc,clf_name='mv_lda')
     
     print('LDA done')
     
@@ -651,11 +625,9 @@ def weekly_run_create():
     clf,acc,lsroc_auc,lsfp,lstp=cross_val(docs_lsa,clas,folds=5,clf=mv_clf,cv=True)
 
     save_file(model=clf,name='mv_lsa',ext='.clf',date=now,folder_path=trained)
-    save_results(date=now,area_under_curve=roc_auc,clf_name='mv_lsa')
+    save_results(date=now,area_under_curve=lsroc_auc,clf_name='mv_lsa')
 
     print('LSA done')
-    
-    
 
     #doc2vec
     print('Start doc2vec')
@@ -666,70 +638,12 @@ def weekly_run_create():
     feature_doc2vec = getAvgFeatureVecs(documents,model)
     feature_doc2vec = Imputer().fit_transform(feature_doc2vec)
     save_file(model=feature_doc2vec,name='doc2vec',ext='.data',date=now,folder_path=features_path)
-    clf,acc,droc_auc=cross_val(feature_doc2vec,clas,folds=5,clf=mv_clf,cv=True)
+    clf,acc,droc_auc,dfp,dtp=cross_val(feature_doc2vec,clas,folds=5,clf=mv_clf,cv=True)
     save_file(model=clf,name='doc2vec',ext='.clf',date=now,folder_path=trained)
-    save_results(date=now,area_under_curve=roc_auc,clf_name='mv_doc2vec')
+    save_results(date=now,area_under_curve=droc_auc,clf_name='mv_doc2vec')
 
     print('doc2vec done')
     
     import json
     with open('dominostats.json', 'wb') as f:
         f.write(json.dumps({"BOW->ROC":broc_auc, "Tf-Idf->ROC": troc_auc, "LDA->ROC": ldroc_auc, "LSA->ROC":lsroc_auc ,"ParagraphEmbedding->ROC":droc_auc,}))
-     
-if __name__ == '__main__':
-    
-    import classification
-    
-    
-#    clas, documents = readcsv(os.path.join(path,'raw_data'))
-#    user_doc = input('Please enter the doc to be classified\n')
-#    print('Input successfull')
-#    t0= time.time()
-#    cleaned_doc = normalize_text(user_doc)
-#    print("  Cleaning done in %.3fsec" % (time.time() - t0))
-#    clean_user_token=cleaned_doc.split()
-#    clean_user_list=[' '.join(clean_user_token)]
-#    
-#    user_model = input('Please select the type of model you wish to use\na:BOW \nb:TFIDF \nc:Doc2Vec\nd:LSA\ne:LDA\n')
-#    if user_model =='a':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = bow(user_string=clean_user_list,docs=documents)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_tfidf,clas,user_tfidf)
-#        
-#    elif user_model == 'c':
-#        print('Strating to transform docs')
-#        sentences=convert_to(documents)
-#        print('Done transforming')
-#        print('Starting vocab generation')
-#        array_for_vocab = to_array(documents)
-#        model = initiate_doc2vec(sentences,array_for_vocab,n=10)
-#        print('Model is ready')
-#        
-#        print('Generating features from List of docs')
-#        features = getAvgFeatureVecs(documents,model)
-#        print('Generating features for user input')
-#        user_features = getAvgFeatureVecs(clean_user_list,model)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(features,clas,user_features)    
-#        
-#    elif user_model =='d':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = tfidf(user_string=clean_user_list,docs=documents)
-#        print('Starting LSA transformatin')
-#        model,docs_lsa = lsa(docs_tfidf)
-#        user_lsa = lsa_test_transform(model,user_tfidf)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_lsa,clas,user_lsa)
-#        
-#    elif user_model =='b':
-#        print('Starting to transform docs')
-#        docs_tfidf, user_tfidf = tfidf(user_string=clean_user_list,docs=documents)
-#        print('Please wait while the Doc is being classified')
-#        cross_val(docs_tfidf,clas,user_tfidf)
-#
-#    elif user_model =='e':
-#        print('Starting to transform Documents')
-#        topicsDist, finalDict,lda = lda_model(docs=documents,no_topics=100)
-#        user_features = user_transform_lda(clean_user_list, finalDict,lda,no_topics=100)
-#        cross_val(topicsDist,clas,user_features)

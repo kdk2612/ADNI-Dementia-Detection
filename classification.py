@@ -4,7 +4,6 @@ Created on Fri Dec  9 09:48:40 2016
 
 @author: kkothari
 """
-from sklearn import cross_validation
 import numpy as np
 from sklearn import linear_model
 from sklearn.svm import SVC
@@ -14,11 +13,9 @@ from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier,AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
-from sklearn.cross_validation import KFold
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.metrics import roc_auc_score, auc
-from sklearn.cross_validation import cross_val_score
-from sklearn.cross_validation import StratifiedKFold
+from sklearn.model_selection import cross_val_score, KFold, StratifiedKFold
 import math
 from sklearn.metrics import matthews_corrcoef
 
@@ -236,7 +233,7 @@ def cross_val(X,y,folds=10,clf=None,cv=True):
         print('Please provide a pre-trained classifer')
     else:
         clf=clf
-    skf = StratifiedKFold(n_folds=folds,y=y)
+    skf = StratifiedKFold(n_splits=folds)
     fold = 1
     cms = np.array([[0,0],[0,0]])
     accs = []
@@ -251,7 +248,7 @@ def cross_val(X,y,folds=10,clf=None,cv=True):
     y_predicted_overall = None
     y_test_overall = None
     if cv:
-        for train_index, test_index in skf:
+        for train_index, test_index in skf.split(X, y):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             clf.fit(X_train, y_train)
@@ -341,12 +338,3 @@ def pred_user(user_transformed, clf, y=None):
     predicted=label[clf.predict(user_transformed)[0]],np.max(clf.predict_proba(user_transformed))*100
     return predicted[0],predicted[1]
                     
-#    usr_p = clf.predict(user_transformed)
-#    print('\nUser class'+str(usr_p))
-#    for x in usr_p:
-#        if x==0:
-#            print("Case recovery eligibility is: Yes")
-#            return 'Yes'
-#        elif x==1:
-#            print("Case recovery eligibility is: No")
-#            return 'No'
