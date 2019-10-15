@@ -26,32 +26,16 @@ from sklearn.preprocessing import Imputer
 import csv
 from sklearn import linear_model
 from matplotlib import pyplot as plt
-from sklearn import metrics
-import scipy.sparse as sp
- 
-from sklearn.decomposition import LatentDirichletAllocation as LDA
-from gensim import corpora,matutils,similarities
+
 from gensim.corpora import Dictionary as dictbuild
 from nltk.corpus import stopwords
-from gensim.models import ldamulticore
 from gensim.models import LdaModel
-from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
-from sklearn import naive_bayes
 from random import shuffle
 from gensim.models import word2vec
-from sklearn.neural_network import MLPClassifier
 
 from sklearn.ensemble import RandomForestClassifier,ExtraTreesClassifier,AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn import tree
-from pprint import pprint   # pretty-printer
-import matplotlib.pyplot as plt
-import scipy.stats as stats
-from sklearn.model_selection import KFold, cross_val_score
-from sklearn.metrics import accuracy_score, confusion_matrix
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-from sklearn.metrics import roc_auc_score, auc
 from gensim import utils
 from gensim.models.doc2vec import LabeledSentence
 from gensim.models import Doc2Vec
