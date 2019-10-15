@@ -9,7 +9,7 @@ This repo contains the code related to the project that was submitted as a part 
 
 The project includes code for: 
 
-Pre-processing
+Vectorization techniques used:
 
 Bagofwords
 
@@ -24,4 +24,6 @@ word2vec
 Doc2Vec
 
 
+The website is live at - 
 
+![Sample Prediction](Sample Prediction.png)
