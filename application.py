@@ -23,7 +23,7 @@ from gensim.corpora import Dictionary as dictbuild
 from nltk.corpus import stopwords
 from gensim.models import ldamulticore
 from gensim.models import LdaModel
-from sklearn import cross_validation
+
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn import naive_bayes
@@ -38,14 +38,14 @@ from sklearn import tree
 from pprint import pprint   # pretty-printer
 import matplotlib.pyplot as plt
 import scipy.stats as stats
-from sklearn.cross_validation import KFold
+from sklearn.model_selection import KFold
 from sklearn.metrics import accuracy_score, confusion_matrix
 from nltk.stem import PorterStemmer, WordNetLemmatizer
 from sklearn.metrics import roc_auc_score, auc
 from gensim import utils
 from gensim.models.doc2vec import LabeledSentence
 from gensim.models import Doc2Vec
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
 from final_cleaner import normalize_user
 import datetime
 from classification2 import MajorityVoteClf
